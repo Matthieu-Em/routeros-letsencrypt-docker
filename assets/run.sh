@@ -112,11 +112,16 @@ scp -q -P $ROUTEROS_SSH_PORT -i "$ROUTEROS_PRIVATE_KEY" "$CERTIFICATE" "$ROUTERO
 [ ! $? == 0 ] && echo 'ERROR!' && exit 1 || echo 'DONE'
 
 sleep 2
-# Import certificate file and delete certificate file after import
-echo -n "Importing certificate file and delete certificate file after import..."
-$routeros /certificate import file-name=$ROUTEROS_FILENAME.pem passphrase=\"\" \; /file remove $ROUTEROS_FILENAME.pem > /dev/null
-[ ! $? == 0 ] && echo 'ERROR!' && exit 1 || echo 'DONE'
+# Import certificate file
+echo -n "Importing certificate file..."
+$routeros /certificate import file-name=$ROUTEROS_FILENAME.pem passphrase=\"\" \
 
+# Delete certificate file after import
+#echo -n "Delete certificate file after import..."
+#if [ ! -f $ROUTEROS_FILENAME.pem ]; then
+#    $routeros /file remove $ROUTEROS_FILENAME.pem > /dev/null
+#    [ ! $? == 0 ] && echo 'ERROR!' && exit 1 || echo 'DONE'
+#fi
 #######################
 # Create Key          #
 #######################
@@ -132,10 +137,9 @@ scp -q -P $ROUTEROS_SSH_PORT -i "$ROUTEROS_PRIVATE_KEY" "$KEY" "$ROUTEROS_USER"@
 [ ! $? == 0 ] && echo 'ERROR!' && exit 1 || echo 'DONE'
 
 sleep 2
-# Import Key file and delete Certificate file after import
-echo -n "Importing Key file and delete Certificate file after import..."
-$routeros /certificate import file-name=$ROUTEROS_FILENAME.key passphrase=\"\" \; /file remove $ROUTEROS_FILENAME.key > /dev/null
-[ ! $? == 0 ] && echo 'ERROR!' && exit 1 || echo 'DONE'
+# Import Key file
+echo -n "Importing Key file"
+$routeros /certificate import file-name=$ROUTEROS_FILENAME.key passphrase=\"\" \
 
 # Set certificate to WebServer
 if [ "$SET_ON_WEB" = true ]; then
